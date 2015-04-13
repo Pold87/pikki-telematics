@@ -4,9 +4,10 @@ The code reached an AUC of 0.8850 on the public leaderboard on kaggle
 for the [Driver Telematic Analysis
 ](http://www.kaggle.com/c/axa-driver-telematics-analysis/).
 
-The code pipeline is structured as follows:
+The code is split in three main parts that should be successively
+called:
 
-1. Step_1_Create_DataFrame.py:
+### Step_1_Create_DataFrame.py:
 
 In this step, the entire kaggle data set is read into data frames and
 saved in HDF5 files. This step only has to be done once, and reduces
@@ -15,14 +16,14 @@ Step_1_Create_DataFrame.py <drivers_path>', where <drivers_path>
 denotes the path of the drivers from Kaggle.
 
 
-2. Step_2_Extract_Features.py:
+### Step_2_Extract_Features.py:
 
 Here, features for each trip are extracted, using the definition of
 Features.py, put in a data frame and saved in HDF5 format.
 It is called by
 'python Step_2_Extract_Features.py <features_path>'
 
-3. Step_3_Classify.py:
+### Step_3_Classify.py:
 
 In this step, a supervised learning approach (Random Forest
 Classifier) is used. For this, a classifier is trained for each driver
