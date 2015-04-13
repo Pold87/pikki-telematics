@@ -33,18 +33,18 @@ negative training set. It is called by
 
 ## Helper files
 
-- Features.py
+### Features.py
 
 Contains the definitions of the 69 features that were
 used in the feature extraction step (Step 2).
 
-- Helpers.py
+### Helpers.py
 
 Contains code for creating successive n-sized chunks.
 
 # Additional files
 
-- CrossClassify.py
+### CrossClassify.py
 
 Contains 'cross-classification' for training the model using
 folds. That means it leaves out a certain amount of trips for each
@@ -54,14 +54,14 @@ predicted are not contained in the training set of the model. This
 makes it more robust with regard to overfitting. It is called by
 'python CrossClassify.py <features_path>'
 
-- CrossValidation.py
+### CrossValidation.py
 
 Contains the cross-validation that was performed by using random trips
 from other drivers and assuming all trips in a driver’s folder to
 belong to this driver. It is called by
 'python CrossValidation.py <features_path>'
 
-- Repeated_Trips.py
+### Repeated_Trips.py
 
 This algorithm compared the Euclidean distances between all
 segments of two trips. To this end, in a preprocessing step, a new
@@ -72,3 +72,8 @@ shorter trip was mapped onto the longer trip at each possible starting
 segment of the longer trip. The similarity was then defined as the
 maximum ratio between the distances below a threshold and the amount
 total of segments of the shorter trip.
+
+
+### matlab/
+
+This folder contains the files for the Needleman–Wunsch bioalignment algorithm.
