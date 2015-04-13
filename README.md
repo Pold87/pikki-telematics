@@ -12,7 +12,7 @@ called:
 In this step, the entire kaggle data set is read into data frames and
 saved in HDF5 files. This step only has to be done once, and reduces
 the time required for Step 2 and 3. It is called by 'python
-Step_1_Create_DataFrame.py <drivers_path>', where <drivers_path>
+Step_1_Create_DataFrame.py drivers_path', where drivers_path
 denotes the path of the drivers from Kaggle.
 
 
@@ -21,7 +21,7 @@ denotes the path of the drivers from Kaggle.
 Here, features for each trip are extracted, using the definition of
 Features.py, put in a data frame and saved in HDF5 format.
 It is called by
-'python Step_2_Extract_Features.py <features_path>'
+'python Step_2_Extract_Features.py features_path'
 
 ### Step_3_Classify.py:
 
@@ -29,7 +29,7 @@ In this step, a supervised learning approach (Random Forest
 Classifier) is used. For this, a classifier is trained for each driver
 as positive set and 200 random trips from other drivers are used as
 negative training set. It is called by
-'python Step_3_Classify.py <features_path>'
+'python Step_3_Classify.py features_path'
 
 ## Helper files
 
@@ -52,14 +52,14 @@ driver (e.g. 40 if #fold = 5) and trains the model on the rest of the
 trips (e.g. 160 if #fold = 5). Therefore, the trips that are to be
 predicted are not contained in the training set of the model. This
 makes it more robust with regard to overfitting. It is called by
-'python CrossClassify.py <features_path>'
+'python CrossClassify.py features_path'
 
 ### CrossValidation.py
 
 Contains the cross-validation that was performed by using random trips
 from other drivers and assuming all trips in a driver’s folder to
 belong to this driver. It is called by
-'python CrossValidation.py <features_path>'
+'python CrossValidation.py features_path'
 
 ### Repeated_Trips.py
 
