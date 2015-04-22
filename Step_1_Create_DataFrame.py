@@ -4,7 +4,7 @@ import pandas as pd
 from os import listdir, path
 import Helpers
 import multiprocessing as mp
-
+import sys
 
 def read_chunk(chunk_num, drivers_path, drivers):
 
@@ -48,7 +48,7 @@ def read_chunk(chunk_num, drivers_path, drivers):
     filename = 'dataframe_{}.h5'.format(chunk_num)
 
     # Save dataframe in HDF5
-    df_all_drivers.to_hdf(path.join("/scratch/vstrobel/chunks32", filename),
+    df_all_drivers.to_hdf(path.join(".", filename),
                           'table')
 
     print("Written to", filename)
@@ -76,10 +76,10 @@ def read_all_chunks(drivers_path, drivers, number_of_chunks):
 def main():
 
     # Number of chunks (depends on memory capacities)
-    number_of_chunks = 32
+    number_of_chunks = 1
 
     # All trips and drivers from Kaggle:
-    drivers_path = "/scratch/vstrobel/drivers"
+    drivers_path = sys.argv[1]
 
     drivers = listdir(drivers_path)
     read_all_chunks(drivers_path, drivers, number_of_chunks)

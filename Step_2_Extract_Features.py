@@ -1,7 +1,7 @@
 from __future__ import division
 import pandas as pd
 from os import path, listdir
-import Features1 as feat
+import Features as feat
 import multiprocessing as mp
 import sys
 
@@ -77,11 +77,9 @@ features = ['trip_time'
           , 'sd_deceleration_rural'
           , 'sd_deceleration_freeway']
 
-# Chunks (containing parts of the mega df)
-chunk_path = "/scratch/vstrobel/chunks32"
-chunks = sorted(listdir(chunk_path))
 
-def do_job(i, chunk, feature_dir):
+
+def do_job(i, chunk, chunk_path):
 
     """
     Extract all features for one chunk and save to file
@@ -103,21 +101,23 @@ def do_job(i, chunk, feature_dir):
     df_features_for_this_chunk = df_features_for_this_chunk.from_dict(features_for_this_chunk)
 
     # Write data frames containing the features to HDF5 file
-    df_features_for_this_chunk.to_hdf(feature_dir + file_name,
+    df_features_for_this_chunk.to_hdf(file_name,
                                       'table')
     print("Written to", file_name)
 
 
 def main():
 
-    feature_dir = sys.argv[1]
+  # Chunks (containing parts of the mega df)
+    chunk_path = sys.argv[1]
+    chunks = sorted(listdir(chunk_path))
 
     jobs = []
 
     # Parallely process chunks by using multiprocessing
     for i, chunk in enumerate(chunks):
         print(chunk)
-        p = mp.Process(target = do_job, args = (i,chunk,feature_dir, ))
+        p = mp.Process(target = do_job, args = (i,chunk,chunk_path, ))
         jobs.append(p)
         p.start()
 

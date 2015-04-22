@@ -49,6 +49,7 @@ def classify(f, df_list, features_path):
     """
 
     # Preprocessing to set data type of columns
+
     feature_df = pd.read_hdf(path.join(features_path, f), key='table')
     feature_df.reset_index(inplace=True)
     feature_df['Driver'] = feature_df.Driver.astype('int')
@@ -56,6 +57,7 @@ def classify(f, df_list, features_path):
     sorted_df = feature_df.sort(['Driver', 'Trip'])
 
     calculated = []
+    all_importances = []
 
     for i, (d, driver_df) in enumerate(sorted_df.groupby('Driver')):
 
@@ -75,11 +77,19 @@ def classify(f, df_list, features_path):
         others.Driver = np.repeat(int(0), amount_others)
 
         # Perform classification
-        submission_df = calc_prob(driver_df, others)
+        submission_df, importances = calc_prob(driver_df, others)
 
         # Append to the final submission dataframe
         calculated.append(submission_df)
 
+        # Append importances
+        all_importances.append(importances)
+
+    # Write importances to file
+    df_importances = pd.DataFrame(all_importances)
+    df_importances.to_csv('importances.csv', index=False)
+
+    # Append calculated probabilities to list of data frames
     df_list.append(pd.concat(calculated))
 
     
@@ -103,6 +113,9 @@ def calc_prob(df_features_driver, df_features_other):
     # Train the classifier
     model.fit(feature_columns, df_train.Driver)
 
+    # Return feature importances
+    importances = dict(zip(feature_columns, model.feature_importances_))
+
     df_submission = pd.DataFrame()
 
     df_submission['driver_trip'] = create_first_column(df_features_driver)
@@ -111,9 +124,9 @@ def calc_prob(df_features_driver, df_features_other):
     probs_array = model.predict_proba(feature_columns[:200])
     probs_df = pd.DataFrame(probs_array)
 
-    df_submission['prob'] = np.array(probs_df)
+    df_submission['prob'] = np.array(probs_df)[:, 1]
 
-    return df_submission
+    return df_submission, importances
 
     
 def create_first_column(df):
@@ -142,7 +155,7 @@ def main():
     for f in features_files:
         p = mp.Process(target = classify, args = (f,
                                                   df_list,
-                                                  features_files, ))
+                                                  features_path, ))
         jobs.append(p)
         p.start()
 
